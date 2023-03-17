@@ -45,6 +45,7 @@ async function getInputData() {
   // TODO: change the name of the excel file after moving/coping it to the folder
   var workbook = xlsx.readFile('data.xlsx');
   var sheet_name_list = workbook.SheetNames;
+  // TODO: here check if there is more than one sheet, here i consider it is the first sheet if not change the index from 0 to index of sheet you need
   var xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
   // convert this Name:Place array to object
   const data = {};

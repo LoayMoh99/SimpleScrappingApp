@@ -91,7 +91,7 @@ buttonElement.addEventListener('click', function () {
 
     
 }
-    }, 500);
+    }, 50);
 });
 
 buttonDeleteElement.addEventListener('click', function () {
