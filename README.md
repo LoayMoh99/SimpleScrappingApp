@@ -1,5 +1,7 @@
 ### TO start:
+Check you have 'nodejs' installed
 
+## Then to run:
 ```bash
 ## Install the needed packages
 npm install
