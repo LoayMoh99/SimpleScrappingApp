@@ -7,10 +7,12 @@ Check you have 'nodejs' installed
 npm install
 
 ## Install the needed egde webdriver or whatever the browser you are using; if edge:
-If your version of edge is (111.0.1661.43) then leave the driver i uploaded
-ELSE check that:
 https://learn.microsoft.com/en-us/microsoft-edge/webdriver-chromium/?tabs=c-sharp#download-microsoft-edge-webdriver
-Then add msedgedriver.exe in the folder
+
+If your version of edge is (111.0.1661.43) then leave the driver i uploaded
+ELSE:
+Download it then unzip it ..
+Then add msedgedriver.exe in the folder ..
 
 Add the excel (.xlsx) file to the folder by naming it data.xlsx or change the filename in the index.js
 
