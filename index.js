@@ -105,9 +105,10 @@ app.listen(port, async () => {
     // see the current data the first time
     for (const key of Object.keys(inputData)) {
       const output = await getCurrentData(key,localhostUrl);
+      // TODO: here i only check if the output i get from server is the same in excell only; check if you want to hardcoded or something..
       if(output !== inputData[key]) {
-        console.log('Wrong output -->', inputData[key]);
-        outputData[key] = 'Wrong output --> '+ inputData[key];
+        outputData[key] = 'Wrong output --> Expected: '+ inputData[key] + ' but got: '+ output;
+        console.log( outputData[key]);
       } else {
         delete outputData[key];
       }
