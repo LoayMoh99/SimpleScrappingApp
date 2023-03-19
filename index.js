@@ -1,6 +1,9 @@
 const express = require('express');
+const http = require("http");
+const socketIO = require("socket.io");
 const { Builder, By, Key } = require('selenium-webdriver');
 const xlsx = require('xlsx');
+const fs = require('fs');
 
 let driver = undefined;
 async function getCurrentData(name,url) {
@@ -64,39 +67,37 @@ async function getInputData() {
 }
 
 const outputData = {};
+let outputDataOld = {};
 let inputData = {};
 const app = express();
-
-// insert new datafrom excel file
-app.get('/new', async (req, res) => {
-  // insert the input data again
-  inputData = await getInputData();
-
-  //to show the data
-  if(Object.keys(outputData).length === 0)
-  res.send('كله تمام يا ريس!!');
-  else
-  res.send(outputData);
-});
-
-//display the output data
-app.get('/', async (req, res) => {
-  //to show the data
-  if(Object.keys(outputData).length === 0)
-  res.send('كله تمام يا ريس!!');
-  else
-  res.send(outputData);
-});
+const server = http.createServer(app);
+const io = socketIO(server);
 
 // TODO: check if you need to change the port (by i guess 3333 is hard to be already running)
 const port = 3333;
-app.listen(port, async () => {
+app.use(express.static("./public"));
+server.listen(port, async () => {
   console.log(`Example app listening at http://localhost:${port}`);
   //initialize the driver
   await initDriver();
 
   // get the input data
   inputData = await getInputData();
+
+  // initial connection event
+  io.on('connection',(socket) => {
+    console.log('someone connected!');
+    io.emit("outputchanged", outputData);
+  });
+
+  // listen for changes on excel file
+  fs.watch('data.xlsx', async function(event) {
+    if (event === 'change') {
+      console.log('change detected on excel file');
+      // insert the input data again
+      inputData = await getInputData();
+    }
+  })
 
   // TODO: here change to whatever url of your server is used!!
   const localhostUrl = 'http://127.0.0.1:8080/'; 
@@ -105,6 +106,7 @@ app.listen(port, async () => {
     // see the current data the first time
     for (const key of Object.keys(inputData)) {
       const output = await getCurrentData(key,localhostUrl);
+      outputDataOld = outputData;
       // TODO: here i only check if the output i get from server is the same in excell only; check if you want to hardcoded or something..
       if(output !== inputData[key]) {
         outputData[key] = 'Wrong output --> Expected: '+ inputData[key] + ' but got: '+ output;
@@ -112,6 +114,12 @@ app.listen(port, async () => {
       } else {
         delete outputData[key];
       }
+    }
+
+    // check if the output changed
+    if(JSON.stringify(outputDataOld) == JSON.stringify(outputData)) {
+      // prodcast event to be listened to
+      io.emit("outputchanged", outputData);
     }
   }
 })
