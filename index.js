@@ -52,15 +52,20 @@ async function getInputData() {
   var xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
   // convert this Name:Place array to object
   const data = {};
-  const objectKeys = Object.keys(xlData[0]);
-  console.log(objectKeys);
-  // TODO: rakez m3aya: here you have to make the 1st row in excel contains headings; and check what are the places of the heading you need i.e. name in index 0, place in index 1 , etc..
-  const nameCol = objectKeys[0]; // hna ana sadfet en elname hwa awel 7aga et2aret = index 0; f you have to check it..
-  const placerCol = objectKeys[1];
+  const headingsNames = Object.keys(xlData[0]);
+  console.log(headingsNames);
+  // TODO: see if the headings names are diff , and take care if there is any special chars i.e. ':' , add it to the names as well ..
+  const nameCol = 'الاسم'
+  const placeCol = 'المكان'
+
+  /** OR you can just add it with name of the colums as follows:
+   * const nameCol = 'الاسم'
+   * const placeCol = 'المكان'
+   */
 
   for (const row of xlData) {
     if(row[nameCol] === undefined) continue;
-    data[row[nameCol]] = row[placerCol] ?? 'لا يوجد';
+    data[row[nameCol]] = row[placeCol] ?? 'لا يوجد';
   }
 
   return data;
