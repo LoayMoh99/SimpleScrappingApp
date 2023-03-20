@@ -1,4 +1,20 @@
-### TO start:
+# Scraping Task:
+**Here the manual task is as follow**:
+- There is an Excel sheet containing names and places that the person with that name should go to.
+- There is a server running that we search with the name to check if the place is correct or not. 
+- So you have to go over all the rows (names:places) in the excel sheet and check each name in the server whether it goes to the right place or not, and this should go along..
+- Check for names that doesn't go for thier right places..
+
+**How i automate it**:
+- I loaded the excel sheet and added a listener to it to check whenever changed to load it again..
+- Loop over all the names then scrap the server as follows:
+   * Get the textfield that i should add the name in it, clear it at first then add the new name to it..
+   * Get the submit button then i click it..
+   * Get the display element then wait for max 5 seconds for the output to appear if it doesn't appear for 5 seconds i consider it error (Timeout!)
+- Display the names that have problems (doesn't go to the right place), and add a listener using socket.io when the output names changes it rerenders the output ..
+
+
+## TO start:
 Check you have 'nodejs' installed
 
 ## Then to run:
