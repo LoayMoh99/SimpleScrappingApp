@@ -29,13 +29,16 @@ async function getCurrentData(name,url) {
   await driver.findElement(button).click();
   
   //wait till the needed display appears
-  let display_element = By.id("insert-offer"); 
-  let text = await driver.findElement(display_element).getText();
+  let display_element;
+  let text; 
   let currentdate = Date.now();
   while ((text===undefined || text===null || text==='') && (Date.now() - currentdate) < 5000) {
-    display_element = By.id("insert-offer");
-    text = await driver.findElement(display_element).getText();
+    try {
+      display_element = By.id("insert-offer");
+      text = await driver.findElement(display_element).getText();
+    } catch (e) {}
   }
+
   let output=text;
   if(text==='') output='Timeout!!! waiting for more than 5 seconds to respond for this name: ' + name;
 
@@ -73,7 +76,6 @@ async function getInputData() {
 }
 
 const outputData = {};
-let outputDataOld = {};
 let inputData = {};
 const app = express();
 const server = http.createServer(app);
@@ -112,20 +114,18 @@ server.listen(port, async () => {
     // see the current data the first time
     for (const key of Object.keys(inputData)) {
       const output = await getCurrentData(key,localhostUrl);
-      outputDataOld = outputData;
       // TODO: here i only check if the output i get from server is the same in excell only; check if you want to hardcoded or something..
       if(output !== inputData[key]) {
-        outputData[key] = 'Wrong output --> Expected: '+ inputData[key] + ' but got: '+ output;
-        console.log( outputData[key]);
+        outputData[key] = 'متوقع: '+ inputData[key] + ' لكن وجد: '+ output;
+        console.log(outputData[key]);
+        io.emit("outputchanged", outputData);
       } else {
-        delete outputData[key];
+        if( key in outputData ) {
+          console.log('delete this key from output :',key);
+          delete outputData[key];
+          io.emit("outputchanged", outputData);
+        }
       }
-    }
-
-    // check if the output changed
-    if(JSON.stringify(outputDataOld) == JSON.stringify(outputData)) {
-      // prodcast event to be listened to
-      io.emit("outputchanged", outputData);
     }
   }
 })
