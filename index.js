@@ -55,7 +55,7 @@ async function getCurrentData(name,url, year=2023) {
 }
 
 async function initDriver() {
-  // TODO: change this instead of MicrosoftEdge to IE
+  // TODO: change this instead of "MicrosoftEdge" to "internet explorer" and add the IEDriverServer.exe instead of msedgedriver.exe
   driver = await new Builder().forBrowser("MicrosoftEdge").build();
 }
 
