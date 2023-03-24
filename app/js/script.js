@@ -2,7 +2,7 @@ console.log('JS OK!');
 
 // Recupero gli elementi in pagina
 const nameElement = document.getElementById('name');
-const kmElement = document.getElementById('km');
+const yearElement = document.getElementById('year');
 const ageElement = document.getElementById('age');
 const buttonElement = document.getElementById('generate');
 const buttonDeleteElement = document.getElementById('cancel');
@@ -10,7 +10,7 @@ const buttonDeleteElement = document.getElementById('cancel');
 // Faccio funzionare i button
 buttonElement.addEventListener('click', function () {
     const nameValue = nameElement.value;
-    const kmValue = parseInt(kmElement.value);
+    const kmValue = parseInt(yearElement.value);
     const ageValue = ageElement.value;
 
     console.log(nameValue);
@@ -18,7 +18,7 @@ buttonElement.addEventListener('click', function () {
     console.log(ageValue);
 
     nameElement.value = '';
-    kmElement.value = '';
+    yearElement.value = '';
     ageElement.value = '';
 
     
@@ -33,7 +33,7 @@ buttonElement.addEventListener('click', function () {
 
 buttonDeleteElement.addEventListener('click', function () {
     nameElement.value = '';
-    kmElement.value = '';
+    yearElement.value = '';
     ageElement.value = '';
 
     insertNameElement.innerText = '';
