@@ -13,7 +13,8 @@ async function getCurrentData(name,url) {
    * 1- Get the textfield that i should add the name in it, clear it a t first then add the new name
    * 2- Get the submit button then i click it
    * 3- Get the display element then wait for 5 second for the output to appear if it doesnet appear for 5 seconds i consider it error (Timeout)
-   *  
+   * 4- Navigate Back to the main page 
+   * 
    * i.e. By.name() or By.id() -> should be changed in your case
    * to know the id or name in html use inspect in the browser and hover to the text field you want to know it..
    */
@@ -28,14 +29,19 @@ async function getCurrentData(name,url) {
   await driver.findElement(button).click();
   
   //wait till the needed display appears
-  const display_element = By.id("insert-offer");
+  let display_element = By.id("insert-offer"); 
   let text = await driver.findElement(display_element).getText();
   let currentdate = Date.now();
   while ((text===undefined || text===null || text==='') && (Date.now() - currentdate) < 5000) {
+    display_element = By.id("insert-offer");
     text = await driver.findElement(display_element).getText();
   }
   let output=text;
   if(text==='') output='Timeout!!! waiting for more than 5 seconds to respond for this name: ' + name;
+
+  // navigate back
+  await driver.navigate().back();  
+  
 
   return output;
 }
@@ -57,11 +63,6 @@ async function getInputData() {
   // TODO: see if the headings names are diff , and take care if there is any special chars i.e. ':' , add it to the names as well ..
   const nameCol = 'الاسم'
   const placeCol = 'المكان'
-
-  /** OR you can just add it with name of the colums as follows:
-   * const nameCol = 'الاسم'
-   * const placeCol = 'المكان'
-   */
 
   for (const row of xlData) {
     if(row[nameCol] === undefined) continue;

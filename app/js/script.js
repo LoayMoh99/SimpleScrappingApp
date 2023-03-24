@@ -27,13 +27,6 @@ const ageElement = document.getElementById('age');
 const buttonElement = document.getElementById('generate');
 const buttonDeleteElement = document.getElementById('cancel');
 
-const ticketElement = document.getElementById('generated-ticket');
-const insertNameElement = document.getElementById('insert-name');
-const insertOfferElement = document.getElementById('insert-offer');
-const insertCarrozzaElement = document.getElementById('insert-carrozza');
-const insertCpElement = document.getElementById('insert-cp');
-const insertPriceElement = document.getElementById('insert-price');
-
 // Faccio funzionare i button
 buttonElement.addEventListener('click', function () {
     const nameValue = nameElement.value;
@@ -48,49 +41,13 @@ buttonElement.addEventListener('click', function () {
     kmElement.value = '';
     ageElement.value = '';
 
+    
     // add delay i.e. as if loading 
     setInterval(() => {
         
-    
-    
-    let price = 0.21 * kmValue;
+        // navigate to the next page
+        window.location.href = 'newPage.html';
 
-    if (!isNaN(nameValue)) {
-    alert ('Hai inserito dei valori non validi');
-
-    } else {
-    insertNameElement.innerText = nameValue;
-    ticketElement.classList.add('visible');
-
-    // Calcolo il prezzo del biglietto e mostro in pagina i risultati
-    if (ageValue === 'min') {
-    price *= 0.8;
-    console.log(price);
-
-    insertOfferElement.innerText = 'اي بتنجان';
-    insertPriceElement.innerText = price.toFixed(2) + `€`;
-
-    } else if (ageValue === 'magg') {
-    console.log(price);
-
-    insertOfferElement.innerText = 'اي بتنجان';
-    insertPriceElement.innerText = price.toFixed(2) + `€`;
-
-    } else if (ageValue === 'over') {
-    price *= 0.6;
-    console.log(price);
-
-    insertOfferElement.innerText = 'اي بتنجان';
-    insertPriceElement.innerText = price.toFixed(2) + `€`;
-    }    
-
-    const rndCarrozza = Math.floor(Math.random() * 12) +1 ;
-    const rndCp = Math.floor(Math.random() * 99999) +10000 ;
-    insertCarrozzaElement.innerText = rndCarrozza;
-    insertCpElement.innerText = rndCp;
-
-    
-}
     }, 50);
 });
 
