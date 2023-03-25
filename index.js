@@ -76,19 +76,20 @@ async function getInputData() {
   const idCol = 'الرقم'
 
   // convert xldata to out structured data: array of {name, place , year}
-  for (const row of xlData) {
-    if(row[nameCol] === undefined) continue;
+  var len = xlData.length;
+  for (var x = 0; x < len; x++) {
+    if(xlData[x][nameCol] === undefined) continue;
     let year = 2023;
-    if(row[idCol] !== undefined) {
-      const id = parseFloat(row[idCol].toString());
+    if(xlData[x][idCol] !== undefined) {
+      const id = parseFloat(xlData[x][idCol].toString());
       if(id > 100000) {
         year=2022;
       } 
     } 
     
     data.push( {
-      name: row[nameCol],
-      place: row[placeCol] ?? 'لا يوجد',
+      name: xlData[x][nameCol],
+      place: xlData[x][placeCol] ?? 'لا يوجد',
       year: year,
     });
   }
@@ -110,6 +111,8 @@ server.listen(port, async () => {
   //initialize the driver
   await initDriver();
 
+  // to detect if the excel file has changed or not
+  let fileChanged = false;
   // get the input data
   inputData = await getInputData();
 
@@ -123,8 +126,7 @@ server.listen(port, async () => {
   fs.watch('data.xlsx', async function(event) {
     if (event === 'change') {
       console.log('change detected on excel file');
-      // insert the input data again
-      inputData = await getInputData();
+      fileChanged = true;
     }
   })
 
@@ -132,20 +134,27 @@ server.listen(port, async () => {
   const localhostUrl = 'http://127.0.0.1:8080/'; 
   // loop foreever
   while (true) {
-    // see the current data the first time
-    for (const item_data of inputData ) {
+    //check if the file needs to be re-read 
+    if(fileChanged) {
+      // insert the input data again
+      inputData = await getInputData();
+      fileChanged = false;
+    }
+    // loop over the data
+    for (const index in inputData ) {
+      const item_data = inputData[index];
       const output = await getCurrentData(item_data.name,localhostUrl,item_data.year);
       // TODO: here i only check if the output i get from server is the same in excell only; check if you want to hardcoded or something..
       if(output !== item_data.place /* && output !== "fgdgfd" */) {
-        outputData[item_data.name] = 'متوقع: '+ item_data.place + ' لكن وجد: '+ output;
-        console.log(outputData[item_data.name]);
+        outputData[item_data.name + '::' + index.toString()] = 'متوقع: '+ item_data.place + ' لكن وجد: '+ output;
+        console.log(outputData[item_data.name + '::' + index.toString()]);
         //send a listener to html
         io.emit("outputchanged", outputData);
       } else {
         // every thing is alright!
-        if( item_data.name in outputData ) {
+        if( (item_data.name + '::' + index.toString()) in outputData ) {
           console.log('delete this key from output :',item_data.name);
-          delete outputData[item_data.name];
+          delete outputData[item_data.name + '::' + index.toString()];
           io.emit("outputchanged", outputData);
         }
       }

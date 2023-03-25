@@ -11,10 +11,11 @@ socket.on("outputchanged", function (outputData) {
         let html = "<ol>";
         Object.entries(outputData).forEach(
             ([key, value]) => {
-                html += `<li>اسم: ${key} --- ${value}</li>`
+                const name = key.split('::')[0];
+                html += `<li>اسم: ${name} --- ${value}</li>`
                 // create toast for new names only
                 if( !(key in outputDataOld) ) {
-                    createToast(`اسم: ${key} --- ${value}`);
+                    createToast(`اسم: ${name} --- ${value}`);
                 }
             }   
             );
