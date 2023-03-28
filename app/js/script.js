@@ -44,3 +44,7 @@ buttonDeleteElement.addEventListener('click', function () {
 
     ticketElement.classList.remove('visible');
 });
+
+function myfunction(index) {
+    console.log('Button ' + index + ' clicked!');
+}

@@ -19,6 +19,12 @@ async function getCurrentData(name,url, year=2023) {
    * to know the id or name in html use inspect in the browser and hover to the text field you want to know it..
    */
 
+  try {
+    // search button with its value 
+    const table_btn_element = By.xpath("//button[contains(., 'Click 3')]"); //'Click 3' should be changed
+    await driver.findElement(table_btn_element).click();
+  } catch (e) {} // incase we only enter for the first time only
+
   const textfield_element = By.id("name"); // here you can use the id if easier in your case
   // clear then insert new name
   await driver.findElement(textfield_element).sendKeys(Key.CONTROL + "a");
